@@ -1,0 +1,59 @@
+Backup::Model.new(:<%= @config[:name] %>, '<%= @config[:descripton] %>') do
+
+
+  <% @databases.each do |database| %>
+  database MySQL do |database|
+    database.name               = '<%= database[:name] %>'
+    database.username           = '<%= database[:user] %>'
+    database.password           = '<%= database[:password] %>'
+    database.additional_options = ['--single-transaction', '--quick']
+  end
+  <% end %>
+
+  compress_with Gzip do |compression|
+    compression.best = true
+  end
+  
+  <% if @s3 %>
+  
+  store_with S3 do |s3|
+    s3.access_key_id      = '<%= @s3[:aws_access_key] %>'
+    s3.secret_access_key  = '<%= @s3[:aws_secret_key] %>'
+    s3.region             = '<%= @s3[:bucket_region] %>'
+    s3.bucket             = '<%= @s3[:bucket_name] %>'
+    s3.keep               = '<%= @s3[:keep] %>'
+  end
+
+  
+  <% if @s3[:sync_directories].size > 0 %>
+  
+  sync_with S3 do |s3|
+    s3.access_key_id     = "<%= @s3[:aws_access_key] %>"
+    s3.secret_access_key = "<%= @s3[:aws_secret_key] %>"
+    s3.bucket            = "<%= @s3[:bucket_name] %>"
+    s3.path              = "<%= @s3[:sync_path] %>" # /files
+    s3.mirror            = true
+
+    s3.directories do |directory|
+      <% @s3[:sync_directories].each do |directory| %>
+      directory.add "<%= directory %>"
+      <% end %>
+    end
+  end
+  
+  <% end %>
+  
+  <% end %>
+  
+  
+  <% if @mail %>
+  notify_by Mail do |mail|
+    mail.on_success           = <%= @mail[:on_success] %>
+    mail.on_failure           = <%= @mail[:on_failure] %>
+    mail.from                 = '<%= @mail[:from_address] %>'
+    mail.to                   = '<%= @mail[:to_address] %>'
+    mail.domain               = '<%= @mail[:domain] %>'
+  end
+  <% end %>
+
+end
