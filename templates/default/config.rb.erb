@@ -1,11 +1,11 @@
 Backup::Model.new(:<%= @config[:name] %>, '<%= @config[:descripton] %>') do
 
 
-  <% @databases.each do |database| %>
+  <% @config[:database][:databases].each do |database| %>
   database MySQL do |database|
-    database.name               = '<%= database[:name] %>'
-    database.username           = '<%= database[:user] %>'
-    database.password           = '<%= database[:password] %>'
+    database.name               = '<%= @config[:database][:name] %>'
+    database.username           = '<%= @config[:database][:user] %>'
+    database.password           = '<%= @config[:database][:password] %>'
     database.additional_options = ['--single-transaction', '--quick']
   end
   <% end %>
@@ -14,46 +14,37 @@ Backup::Model.new(:<%= @config[:name] %>, '<%= @config[:descripton] %>') do
     compression.best = true
   end
   
-  <% if @s3 %>
-  
   store_with S3 do |s3|
-    s3.access_key_id      = '<%= @s3[:aws_access_key] %>'
-    s3.secret_access_key  = '<%= @s3[:aws_secret_key] %>'
-    s3.region             = '<%= @s3[:bucket_region] %>'
-    s3.bucket             = '<%= @s3[:bucket_name] %>'
-    s3.keep               = '<%= @s3[:keep] %>'
+    s3.access_key_id      = '<%= @config[:s3][:aws_access_key] %>'
+    s3.secret_access_key  = '<%= @config[:s3][:aws_secret_key] %>'
+    s3.region             = '<%= @config[:s3][:bucket_region] %>'
+    s3.bucket             = '<%= @config[:s3][:bucket_name] %>'
+    s3.keep               = '<%= @config[:s3][:keep] %>'
   end
 
   
-  <% if @s3[:sync_directories].size > 0 %>
-  
   sync_with S3 do |s3|
-    s3.access_key_id     = "<%= @s3[:aws_access_key] %>"
-    s3.secret_access_key = "<%= @s3[:aws_secret_key] %>"
-    s3.bucket            = "<%= @s3[:bucket_name] %>"
-    s3.path              = "<%= @s3[:sync_path] %>" # /files
+    s3.access_key_id     = "<%= @config[:s3][:aws_access_key] %>"
+    s3.secret_access_key = "<%= @config[:s3][:aws_secret_key] %>"
+    s3.bucket            = "<%= @config[:s3][:bucket_name] %>"
+    s3.path              = "<%= @config[:s3][:sync_path] %>" # /files
     s3.mirror            = true
 
     s3.directories do |directory|
-      <% @s3[:sync_directories].each do |directory| %>
+      <% @config[:s3][:sync_directories].each do |directory| %>
       directory.add "<%= directory %>"
       <% end %>
     end
   end
   
-  <% end %>
-  
-  <% end %>
-  
-  
-  <% if @mail %>
+
   notify_by Mail do |mail|
-    mail.on_success           = <%= @mail[:on_success] %>
-    mail.on_failure           = <%= @mail[:on_failure] %>
-    mail.from                 = '<%= @mail[:from_address] %>'
-    mail.to                   = '<%= @mail[:to_address] %>'
-    mail.domain               = '<%= @mail[:domain] %>'
+    mail.on_success           = <%= @config[:mail][:on_success] %>
+    mail.on_failure           = <%= @config[:mail][:on_failure] %>
+    mail.from                 = '<%= @config[:mail][:from_address] %>'
+    mail.to                   = '<%= @config[:mail][:to_address] %>'
+    mail.domain               = '<%= @config[:mail][:domain] %>'
   end
-  <% end %>
+
 
 end
