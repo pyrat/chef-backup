@@ -9,9 +9,10 @@ default[:backup][:database][:password] = 'admin_password'
 default[:backup][:database][:databases] = ['test_database', 'test_db2']
 
 
-default[:backup][:s3][:aws_access_key] = 'access_key'
-default[:backup][:s3][:aws_secret_key] = 'secret_key'
-default[:backup][:s3][:bucket_region] = 'us-west1'
+default[:backup][:s3][:aws_access_key] = File.read("/home/#{default[:backup][:backup_user]}/.aws/access_key")
+default[:backup][:s3][:aws_secret_key] = File.read("/home/#{default[:backup][:backup_user]}/.aws/secret_key")
+default[:backup][:s3][:bucket_region] = 'us-east-1'
+
 
 # Create this beforehand
 default[:backup][:s3][:bucket_name] = 'bucket_name'

@@ -9,13 +9,24 @@
 
 # Install backup, s3sync, fog, mail, whenever
 
-['backup', 's3sync', 'fog', 'mail', 'whenever'].each do |gem_name|
+package "libxslt" do
+  package_name "libxslt-dev"
+  action :install
+end
+
+package "libxml-dev" do
+  package_name "libxml2-dev"
+  action :install
+end
+
+
+['backup', 's3sync', 'fog', 'mail', 'whenever', 'popen4'].each do |gem_name|
   gem_package gem_name do
     action :install
   end
 end
 
-execute "cd /home/#{node[:backup][:backup_user]};backup --setup" do
+execute "cd /home/#{node[:backup][:backup_user]} && backup generate" do
   user node[:backup][:backup_user]
 end
 
