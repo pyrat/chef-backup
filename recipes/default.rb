@@ -7,7 +7,7 @@
 # MIT license
 #
 
-# install backup, s3sync, fog, mail, whenever
+# Install backup, s3sync, fog, mail, whenever
 
 ['backup', 's3sync', 'fog', 'mail', 'whenever'].each do |gem_name|
   gem_package gem_name do
@@ -15,8 +15,14 @@
   end
 end
 
-execute "cd ~/;backup --setup" do
+execute "cd /home/#{node[:backup][:backup_user]};backup --setup" do
   user node[:backup][:backup_user]
+end
+
+template "/home/#{node[:backup][:backup_user]}/Backup/config.rb" do
+  owner node[:backup][:backup_user]
+  source "config.rb.erb"
+  variables(:config => node[:backup])
 end
 
 
