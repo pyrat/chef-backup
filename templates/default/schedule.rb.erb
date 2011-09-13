@@ -1,0 +1,5 @@
+set :output, "#{path}/log/cron.log"
+
+every 12.hours do
+  command "backup perform --trigger <%= @config[:name] %>"
+end

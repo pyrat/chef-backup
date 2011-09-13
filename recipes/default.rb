@@ -26,16 +26,26 @@ end
   end
 end
 
-execute "cd /home/#{node[:backup][:backup_user]} && backup generate" do
-  user node[:backup][:backup_user]
+['Backup', 'Backup/config'].each do |dir|
+  execute "mkdir /home/#{node[:backup][:backup_user]}/#{dir}" do
+    user node[:backup][:backup_user]
+    only_if { !File.directory?("/home/#{node[:backup][:backup_user]}/#{dir}") }
+  end
 end
 
 template "/home/#{node[:backup][:backup_user]}/Backup/config.rb" do
   owner node[:backup][:backup_user]
   source "config.rb.erb"
   variables(:config => node[:backup])
+  not_if { File.exists?("/home/#{node[:backup][:backup_user]}/Backup/config.rb")}
 end
 
 
-
+# Whenever config setup.
+template "/home/#{node[:backup][:backup_user]}/Backup/config/schedule.rb" do
+  owner node[:backup][:backup_user]
+  source "schedule.rb.erb"
+  variables(:config => node[:backup])
+  not_if { File.exists?("/home/#{node[:backup][:backup_user]}/Backup/config/schedule.rb")}
+end
 
