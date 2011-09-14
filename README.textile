@@ -16,3 +16,6 @@ You should be familiar with the "backup gem":https://github.com/meskyanichi/back
 
 Note: This cookbook is in early stages so improvements and contributions are encouraged!
 
+h2. Installation
+
+I recommend "knife github cookbooks":https://github.com/websterclay/knife-github-cookbooks for installing this cookbook into your chef repository.
