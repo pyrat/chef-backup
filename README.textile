@@ -1,1 +1,18 @@
-A chef recipe for the backup gem. Currently a work in progress.
+!http://greenteaandbiscuits.files.wordpress.com/2010/08/chef.jpg!
+
+h1. Chef Backup
+
+A cookbook for adding offsite backups to your webserver. Installs all the gems necessary.
+Requires a bit of pre-configuration before running the cookbook.
+
+Assumes database and directory backup, with an s3sync to an amazon s3 bucket.
+
+* You need to create the bucket on s3. (currently set to us-east-1 region)
+* Copy amazon access keys to ~/.aws/secret_key and ~/.aws/access_key
+* Database passwords
+* Directories to sync.
+
+You should be familiar with the "backup gem":https://github.com/meskyanichi/backup 
+
+Note: This cookbook is in early stages so improvements and contributions are encouraged!
+
