@@ -49,3 +49,11 @@ template "/home/#{node[:backup][:backup_user]}/Backup/config/schedule.rb" do
   not_if { File.exists?("/home/#{node[:backup][:backup_user]}/Backup/config/schedule.rb")}
 end
 
+template "/etc/logrotate.d/whenever_log" do
+  owner "root"
+  source "logrotate.erb"
+  variables(:backup_path => "/home/#{node[:backup][:backup_user]}/Backup")
+end
+
+
+

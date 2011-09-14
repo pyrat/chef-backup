@@ -1,11 +1,11 @@
-Backup::Model.new(:<%= @config[:name] %>, '<%= @config[:descripton] %>') do
+Backup::Model.new(:<%= @config[:name] %>, '<%= @config[:description] %>') do
 
 
   <% @config[:database][:databases].each do |database| %>
   database MySQL do |database|
-    database.name               = '<%= @config[:database][:username] %>'
-    database.username           = '<%= @config[:database][:password] %>'
-    database.password           = '<%= database %>'
+    database.name               = '<%= database %>'
+    database.username           = '<%= @config[:database][:username] %>'
+    database.password           = '<%= @config[:database][:password] %>'
     database.additional_options = ['--single-transaction', '--quick']
   end
   <% end %>
@@ -27,7 +27,7 @@ Backup::Model.new(:<%= @config[:name] %>, '<%= @config[:descripton] %>') do
     s3.access_key_id     = "<%= @config[:s3][:aws_access_key] %>"
     s3.secret_access_key = "<%= @config[:s3][:aws_secret_key] %>"
     s3.bucket            = "<%= @config[:s3][:bucket_name] %>"
-    s3.path              = "<%= @config[:s3][:sync_path] %>" # /files
+    s3.path              = "<%= @config[:s3][:sync_path] %>"
     s3.mirror            = true
 
     s3.directories do |directory|
