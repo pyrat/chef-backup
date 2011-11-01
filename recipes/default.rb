@@ -53,6 +53,7 @@ template "/etc/logrotate.d/whenever_log" do
   owner "root"
   source "logrotate.erb"
   variables(:backup_path => "/home/#{node[:backup][:backup_user]}/Backup")
+  not_if { File.exists? "/etc/logrotate.d/whenever_log" }
 end
 
 
